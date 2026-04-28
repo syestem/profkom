@@ -1,0 +1,268 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Статистика абонементов</title>
+  <script src="./chart.umd.js"></script>
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <div class="reading-progress" aria-hidden="true">
+    <div class="reading-progress-bar" id="readingProgressBar"></div>
+  </div>
+
+  <nav class="section-nav" aria-label="Навигация по разделам">
+    <a class="section-nav-link" href="#summary" data-nav-link="summary"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 5h16v4H4zM4 11h10v8H4zM16 11h4v3h-4zM16 16h4v3h-4z"/></svg></span><span>Сводка</span></a>
+    <a class="section-nav-link" href="#insights" data-nav-link="insights"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3l3 6 6 .9-4.5 4.3 1 6-5.5-3-5.5 3 1-6L3 9.9 9 9z"/></svg></span><span>Выводы</span></a>
+    <a class="section-nav-link" href="#faculties" data-nav-link="faculties"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3 2 8l10 5 8-4v7h2V8zM6 12v4c0 2 3 4 6 4s6-2 6-4v-4l-6 3z"/></svg></span><span>Факультеты</span></a>
+    <a class="section-nav-link" href="#table" data-nav-link="table"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 4h18v16H3zm2 2v3h14V6zm0 5v3h4v-3zm6 0v3h8v-3zm-6 5v2h4v-2zm6 0v2h8v-2z"/></svg></span><span>Таблица</span></a>
+    <a class="section-nav-link" href="#charts" data-nav-link="charts"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 19h16v2H2V3h2zm2-2V9h3v8zm5 0V5h3v12zm5 0v-6h3v6z"/></svg></span><span>Графики</span></a>
+  </nav>
+
+  <button class="back-to-top" id="backToTop" type="button" aria-label="Наверх">Наверх</button>
+
+  <div class="loading-overlay" id="loadingOverlay" aria-live="polite">
+    <div class="loading-panel">
+      <div class="loading-title">Загрузка отчета</div>
+      <div class="loading-subtitle" id="loadingSubtitle">Подготавливаем статистику и визуализации...</div>
+      <div class="loading-steps">
+        <div class="loading-step is-active" id="loadingStepData">1. Загрузка данных</div>
+        <div class="loading-step" id="loadingStepCharts">2. Построение диаграмм</div>
+        <div class="loading-step" id="loadingStepDone">3. Готово</div>
+      </div>
+      <div class="skeleton-grid">
+        <div class="skeleton skeleton-card"></div>
+        <div class="skeleton skeleton-card"></div>
+        <div class="skeleton skeleton-card"></div>
+      </div>
+      <div class="skeleton skeleton-line skeleton-line-wide"></div>
+      <div class="skeleton skeleton-line"></div>
+      <div class="skeleton skeleton-chart"></div>
+    </div>
+  </div>
+
+  <main class="page">
+    <section class="hero" id="hero">
+      <div class="hero-card">
+        <div class="hero-top">
+          <div class="hero-top-badges">
+            <div class="eyebrow">Отчет по спискам абонементов</div>
+            <div class="mode-badge">Локальный режим</div>
+          </div>
+          <button class="theme-toggle" id="themeToggle" type="button">Темная тема</button>
+        </div>
+        <h1>Статистика выданных абонементов по залу и бассейну</h1>
+        <p class="hero-text">
+          Сводка собрана по документам из папки со списками. Ниже показаны общий итог,
+          детализация по месяцам и визуальное сравнение загрузки по двум направлениям.
+        </p>
+      </div>
+      <aside class="info-card">
+        <p class="info-title">Покрытие отчета</p>
+        <p class="info-value">7 месяцев</p>
+        <p class="info-note">
+          В анализ включены ноябрь и декабрь 2025 года, а также январь, февраль, март, апрель и май 2026 года.
+        </p>
+      </aside>
+    </section>
+
+    <section class="summary" id="summary" data-section="summary">
+      <article class="card">
+        <div class="card-header">
+          <div class="card-title">Тренажерный зал</div>
+          <span class="badge badge-gym">Зал</span>
+        </div>
+        <p class="card-value">330 / 838</p>
+        <div class="card-meta">
+          <span>Заполнение</span>
+          <strong>39.38%</strong>
+        </div>
+        <div class="progress"><span style="width: 39.38%; background: linear-gradient(90deg, #3b82f6, #1e40af);"></span></div>
+      </article>
+
+      <article class="card">
+        <div class="card-header">
+          <div class="card-title">Бассейн</div>
+          <span class="badge badge-pool">Бассейн</span>
+        </div>
+        <p class="card-value">365 / 1260</p>
+        <div class="card-meta">
+          <span>Заполнение</span>
+          <strong>28.97%</strong>
+        </div>
+        <div class="progress"><span style="width: 28.97%; background: linear-gradient(90deg, #22d3ee, #0891b2);"></span></div>
+      </article>
+
+      <article class="card">
+        <div class="card-header">
+          <div class="card-title">Общий итог</div>
+          <span class="badge badge-all">Все</span>
+        </div>
+        <p class="card-value">695 / 2098</p>
+        <div class="card-meta">
+          <span>Заполнение</span>
+          <strong>33.13%</strong>
+        </div>
+        <div class="progress"><span style="width: 33.13%; background: linear-gradient(90deg, #fbbf24, #f59e0b);"></span></div>
+      </article>
+    </section>
+
+    <section class="insights" id="insights" data-section="insights">
+      <article class="insight-card">
+        <p class="insight-label">Максимум выдано</p>
+        <h3 class="insight-title" id="insightMaxTitle">-</h3>
+        <p class="insight-text" id="insightMaxText">-</p>
+      </article>
+      <article class="insight-card">
+        <p class="insight-label">Минимум выдано</p>
+        <h3 class="insight-title" id="insightMinTitle">-</h3>
+        <p class="insight-text" id="insightMinText">-</p>
+      </article>
+      <article class="insight-card">
+        <p class="insight-label">Лучший месяц</p>
+        <h3 class="insight-title" id="insightBestTitle">-</h3>
+        <p class="insight-text" id="insightBestText">-</p>
+      </article>
+      <article class="insight-card">
+        <p class="insight-label">Лидер по итогам</p>
+        <h3 class="insight-title" id="insightLeadTitle">-</h3>
+        <p class="insight-text" id="insightLeadText">-</p>
+      </article>
+    </section>
+
+    <section class="panel faculty-panel" id="faculties" data-section="faculties">
+      <div class="panel-header">
+        <div>
+          <h2 class="panel-title">Статистика по факультетам</h2>
+          <p class="panel-subtitle">Можно выбрать факультет и посмотреть, как менялась выдача абонементов по месяцам в течение учебного года.</p>
+        </div>
+      </div>
+
+      <div class="filters faculty-filters sticky-filters sticky-filters-secondary">
+        <div class="filter-group">
+          <span class="filter-label">Факультет</span>
+          <select class="month-select" id="facultySelect" aria-label="Выбор факультета"></select>
+        </div>
+        <div class="filter-group">
+          <span class="filter-label">Тип</span>
+          <div class="segmented" id="facultyTypeFilters">
+            <button class="filter-btn active" type="button" data-faculty-type="all">Зал + бассейн</button>
+            <button class="filter-btn" type="button" data-faculty-type="gym">Только зал</button>
+            <button class="filter-btn" type="button" data-faculty-type="pool">Только бассейн</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="faculty-summary" id="facultySummary"></div>
+
+      <div class="faculty-grid">
+        <div class="chart-box faculty-chart-box">
+          <h3 class="chart-title">Динамика по факультету</h3>
+          <p class="chart-subtitle" id="facultyChartSubtitle">Помесячная статистика по выбранному факультету.</p>
+          <canvas id="facultyChart"></canvas>
+        </div>
+        <div class="table-wrap faculty-table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Месяц</th>
+                <th>Зал</th>
+                <th>Бассейн</th>
+                <th>Всего</th>
+              </tr>
+            </thead>
+            <tbody id="facultyTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel" id="table" data-section="table">
+      <div class="panel-header">
+        <div>
+          <h2 class="panel-title">Таблица по месяцам</h2>
+          <p class="panel-subtitle">Данные отсортированы по учебному году 2025/2026: от ноября 2025 до мая 2026. Таблицу можно фильтровать по типу, месяцу и поисковой строкой.</p>
+        </div>
+      </div>
+
+      <div class="filters sticky-filters sticky-filters-primary">
+        <div class="filter-group">
+          <span class="filter-label">Тип</span>
+          <div class="segmented" id="typeFilters">
+            <button class="filter-btn active" type="button" data-type-filter="all">Все</button>
+            <button class="filter-btn" type="button" data-type-filter="gym">Зал</button>
+            <button class="filter-btn" type="button" data-type-filter="pool">Бассейн</button>
+            <button class="filter-btn" type="button" data-type-filter="total">Только итоги</button>
+          </div>
+        </div>
+        <div class="filter-group">
+          <span class="filter-label">Месяц</span>
+          <select class="month-select" id="monthFilter" aria-label="Фильтр по месяцу">
+            <option value="all">Все месяцы</option>
+            <option value="Ноябрь">Ноябрь 2025</option>
+            <option value="Декабрь">Декабрь 2025</option>
+            <option value="Январь">Январь 2026</option>
+            <option value="Февраль">Февраль 2026</option>
+            <option value="Март">Март 2026</option>
+            <option value="Апрель">Апрель 2026</option>
+            <option value="Май">Май 2026</option>
+            <option value="Итого">Только итоги</option>
+          </select>
+          <input class="search-input" id="tableSearch" type="search" placeholder="Поиск по типу или месяцу" aria-label="Поиск по таблице">
+          <button class="reset-btn" id="resetFilters" type="button">Сбросить</button>
+        </div>
+        <div class="filter-group">
+          <span class="filter-label">Сортировка</span>
+          <select class="month-select" id="sortMetric" aria-label="Сортировка по значению">
+            <option value="default">По учебному году</option>
+            <option value="type">По типу</option>
+            <option value="month">По месяцу</option>
+            <option value="issued">По выдано</option>
+            <option value="quota">По квоте</option>
+            <option value="fill">По заполнению</option>
+          </select>
+          <button class="reset-btn" id="sortDirection" type="button" aria-label="Направление сортировки">По убыванию</button>
+        </div>
+      </div>
+
+      <p class="table-status" id="tableStatus">Показаны все строки за учебный год 2025/2026.</p>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th><button class="th-button" type="button" data-sort-column="type">Тип <span class="sort-indicator" data-sort-indicator="type"></span></button></th>
+              <th><button class="th-button" type="button" data-sort-column="month">Месяц <span class="sort-indicator" data-sort-indicator="month"></span></button></th>
+              <th><button class="th-button" type="button" data-sort-column="issued">Выдано <span class="sort-indicator" data-sort-indicator="issued"></span></button></th>
+              <th><button class="th-button" type="button" data-sort-column="quota">Квота <span class="sort-indicator" data-sort-indicator="quota"></span></button></th>
+              <th><button class="th-button" type="button" data-sort-column="fill">Заполнение <span class="sort-indicator" data-sort-indicator="fill"></span></button></th>
+            </tr>
+          </thead>
+          <tbody id="reportTableBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="charts" id="charts" data-section="charts">
+      <div class="chart-box">
+        <h2 class="chart-title">Выдано по месяцам</h2>
+        <p class="chart-subtitle">Сравнение количества выданных абонементов по залу и бассейну за каждый месяц.</p>
+        <canvas id="issuedChart"></canvas>
+      </div>
+      <div class="chart-box">
+        <h2 class="chart-title">Заполнение по месяцам</h2>
+        <p class="chart-subtitle">Процент использования квоты помогает увидеть более слабые и более сильные месяцы.</p>
+        <canvas id="fillChart"></canvas>
+      </div>
+      <div class="chart-box">
+        <h2 class="chart-title">Зал vs бассейн</h2>
+        <p class="chart-subtitle">Доля общего количества выданных абонементов между двумя направлениями за учебный год.</p>
+        <canvas id="shareChart"></canvas>
+      </div>
+    </section>
+  </main>
+
+  <script src="./app.js"></script>
+</body>
+</html>
